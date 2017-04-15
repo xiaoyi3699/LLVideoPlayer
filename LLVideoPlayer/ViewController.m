@@ -7,8 +7,11 @@
 //
 
 #import "ViewController.h"
+#import "LLVideoPlayerViewController.h"
 
-@interface ViewController ()
+@interface ViewController (){
+    NSURL *_fileURL;
+}
 
 @end
 
@@ -16,14 +19,14 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
+    
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"rzjt" ofType:@"MP4"];
+    _fileURL = [NSURL fileURLWithPath:filePath];
 }
 
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (IBAction)btn:(id)sender {
+    LLVideoPlayerViewController *videoPlayerVC = [[LLVideoPlayerViewController alloc] initWithVideoUrl:_fileURL];
+    [self presentViewController:videoPlayerVC animated:YES completion:nil];
 }
-
 
 @end

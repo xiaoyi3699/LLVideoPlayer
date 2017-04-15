@@ -7,7 +7,7 @@
 //
 
 #import "LLAVPlayerView.h"
-#import "LLBaseSlider.h"
+#import "UIImage+LLAVPlayer.h"
 #import <AVFoundation/AVFoundation.h>
 #import <MediaPlayer/MediaPlayer.h>
 
@@ -38,6 +38,10 @@ typedef NS_ENUM(NSUInteger, LLDirection) {
 
 @end
 
+#define R_G_B(_r_,_g_,_b_)          \
+[UIColor colorWithRed:_r_/255. green:_g_/255. blue:_b_/255. alpha:1.0]
+#define R_G_B_A(_r_,_g_,_b_,_a_)    \
+[UIColor colorWithRed:_r_/255. green:_g_/255. blue:_b_/255. alpha:_a_]
 @implementation LLAVPlayerView
 
 - (id)initWithFrame:(CGRect)frame
@@ -136,7 +140,7 @@ typedef NS_ENUM(NSUInteger, LLDirection) {
     
     //全屏按钮
     UIButton *fullScreenBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [fullScreenBtn setFrame:CGRectMake(_topView.maxX-40, 15, 35, 20)];
+    [fullScreenBtn setFrame:CGRectMake(CGRectGetMaxX(_topView.frame)-40, 15, 35, 20)];
     fullScreenBtn.titleLabel.font = [UIFont systemFontOfSize:11];
     fullScreenBtn.layer.masksToBounds = YES;
     fullScreenBtn.layer.cornerRadius = 3;
@@ -164,14 +168,14 @@ typedef NS_ENUM(NSUInteger, LLDirection) {
     [_playBtn addTarget:self action:@selector(playBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     [_toolView addSubview:_playBtn];
     
-    _currentTime = [[UILabel alloc] initWithFrame:CGRectMake(_playBtn.maxX, 10, 40, 20)];
+    _currentTime = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(_playBtn.frame), 10, 40, 20)];
     _currentTime.text = @"00:00";
     _currentTime.textColor = [UIColor whiteColor];
     _currentTime.font = [UIFont systemFontOfSize:8];
     _currentTime.textAlignment = NSTextAlignmentCenter;
     [_toolView addSubview:_currentTime];
     
-    _progressSlider= [[LLBaseSlider alloc] initWithFrame:CGRectMake(_currentTime.maxX,12.5,frame.size.width-_currentTime.maxX-40,15)];
+    _progressSlider= [[UISlider alloc] initWithFrame:CGRectMake(CGRectGetMaxX(_currentTime.frame),12.5,frame.size.width-CGRectGetMaxX(_currentTime.frame)-40,15)];
     _progressSlider.minimumValue = 0.0;
     _progressSlider.maximumValue = 1.0;
     [_progressSlider addTarget:self action:@selector(touchDown:) forControlEvents:UIControlEventTouchDown];
@@ -181,7 +185,7 @@ typedef NS_ENUM(NSUInteger, LLDirection) {
     _progressSlider.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     [_toolView addSubview:_progressSlider];
     
-    _totalTime = [[UILabel alloc] initWithFrame:CGRectMake(_progressSlider.maxX, 10, 40, 20)];
+    _totalTime = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(_progressSlider.frame), 10, 40, 20)];
     _totalTime.text = @"00:00";
     _totalTime.textColor = [UIColor whiteColor];
     _totalTime.font = [UIFont systemFontOfSize:8];

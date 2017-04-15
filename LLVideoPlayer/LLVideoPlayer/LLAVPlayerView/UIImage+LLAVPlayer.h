@@ -10,4 +10,6 @@
 
 @interface UIImage (LLAVPlayer)
 
++ (UIImage *)getRoundImageWithColor:(UIColor*)color size:(CGSize)size;
+
 @end

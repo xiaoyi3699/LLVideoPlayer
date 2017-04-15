@@ -17,6 +17,7 @@
 
 @end
 
+#define LL_SCREEN_BOUNDS  [UIScreen mainScreen].bounds
 @implementation LLVideoPlayerViewController
 
 - (instancetype)initWithVideoUrl:(NSURL *)videoUrl {
@@ -27,14 +28,9 @@
     return self;
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
-}
-
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
+//隐藏状态栏
+- (BOOL)prefersStatusBarHidden {
+    return YES;
 }
 
 - (void)viewDidLoad {
@@ -77,7 +73,7 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         [UIView animateWithDuration:0.25 animations:^{
             self.view.transform = CGAffineTransformMakeRotation(M_PI*(rotation));
-            self.view.frame = SCREEN_BOUNDS;
+            self.view.frame = LL_SCREEN_BOUNDS;
             _playerView.frame = self.view.bounds;
         }];
     });
@@ -105,7 +101,7 @@
     }
     [UIView animateWithDuration:0.25 animations:^{
         self.view.transform = CGAffineTransformMakeRotation(M_PI*(rotation));
-        self.view.frame = SCREEN_BOUNDS;
+        self.view.frame = LL_SCREEN_BOUNDS;
         _playerView.frame = self.view.bounds;
     }];
 }

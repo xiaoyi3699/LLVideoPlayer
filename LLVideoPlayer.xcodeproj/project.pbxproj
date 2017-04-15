@@ -15,6 +15,13 @@
 		75EBDF9B1EA22486001D0CA7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 75EBDF991EA22486001D0CA7 /* LaunchScreen.storyboard */; };
 		75EBDFA61EA22486001D0CA7 /* LLVideoPlayerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 75EBDFA51EA22486001D0CA7 /* LLVideoPlayerTests.m */; };
 		75EBDFB11EA22486001D0CA7 /* LLVideoPlayerUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 75EBDFB01EA22486001D0CA7 /* LLVideoPlayerUITests.m */; };
+		75EBDFC41EA224AB001D0CA7 /* LLAVPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 75EBDFC11EA224AB001D0CA7 /* LLAVPlayerView.m */; };
+		75EBDFC51EA224AB001D0CA7 /* LLVideoPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 75EBDFC31EA224AB001D0CA7 /* LLVideoPlayerViewController.m */; };
+		75EBDFCB1EA22616001D0CA7 /* UIImage+LLAVPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 75EBDFCA1EA22616001D0CA7 /* UIImage+LLAVPlayer.m */; };
+		75EBDFCF1EA22C45001D0CA7 /* rzjt.MP4 in Resources */ = {isa = PBXBuildFile; fileRef = 75EBDFCE1EA22C45001D0CA7 /* rzjt.MP4 */; };
+		75EBDFD21EA22C9D001D0CA7 /* player_pause.png in Resources */ = {isa = PBXBuildFile; fileRef = 75EBDFD01EA22C9D001D0CA7 /* player_pause.png */; };
+		75EBDFD31EA22C9D001D0CA7 /* player_play.png in Resources */ = {isa = PBXBuildFile; fileRef = 75EBDFD11EA22C9D001D0CA7 /* player_play.png */; };
+		75EBDFD51EA22CB7001D0CA7 /* back_white_small.png in Resources */ = {isa = PBXBuildFile; fileRef = 75EBDFD41EA22CB7001D0CA7 /* back_white_small.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +58,16 @@
 		75EBDFAC1EA22486001D0CA7 /* LLVideoPlayerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LLVideoPlayerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		75EBDFB01EA22486001D0CA7 /* LLVideoPlayerUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LLVideoPlayerUITests.m; sourceTree = "<group>"; };
 		75EBDFB21EA22486001D0CA7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		75EBDFC01EA224AB001D0CA7 /* LLAVPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LLAVPlayerView.h; sourceTree = "<group>"; };
+		75EBDFC11EA224AB001D0CA7 /* LLAVPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LLAVPlayerView.m; sourceTree = "<group>"; };
+		75EBDFC21EA224AB001D0CA7 /* LLVideoPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LLVideoPlayerViewController.h; sourceTree = "<group>"; };
+		75EBDFC31EA224AB001D0CA7 /* LLVideoPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LLVideoPlayerViewController.m; sourceTree = "<group>"; };
+		75EBDFC91EA22616001D0CA7 /* UIImage+LLAVPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+LLAVPlayer.h"; sourceTree = "<group>"; };
+		75EBDFCA1EA22616001D0CA7 /* UIImage+LLAVPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+LLAVPlayer.m"; sourceTree = "<group>"; };
+		75EBDFCE1EA22C45001D0CA7 /* rzjt.MP4 */ = {isa = PBXFileReference; lastKnownFileType = file; name = rzjt.MP4; path = LLVideoPlayer/rzjt.MP4; sourceTree = "<group>"; };
+		75EBDFD01EA22C9D001D0CA7 /* player_pause.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = player_pause.png; sourceTree = "<group>"; };
+		75EBDFD11EA22C9D001D0CA7 /* player_play.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = player_play.png; sourceTree = "<group>"; };
+		75EBDFD41EA22CB7001D0CA7 /* back_white_small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = back_white_small.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +118,8 @@
 		75EBDF8A1EA22486001D0CA7 /* LLVideoPlayer */ = {
 			isa = PBXGroup;
 			children = (
+				75EBDFCE1EA22C45001D0CA7 /* rzjt.MP4 */,
+				75EBDFBE1EA224AB001D0CA7 /* LLVideoPlayer */,
 				75EBDF8E1EA22486001D0CA7 /* AppDelegate.h */,
 				75EBDF8F1EA22486001D0CA7 /* AppDelegate.m */,
 				75EBDF911EA22486001D0CA7 /* ViewController.h */,
@@ -138,6 +157,39 @@
 				75EBDFB21EA22486001D0CA7 /* Info.plist */,
 			);
 			path = LLVideoPlayerUITests;
+			sourceTree = "<group>";
+		};
+		75EBDFBE1EA224AB001D0CA7 /* LLVideoPlayer */ = {
+			isa = PBXGroup;
+			children = (
+				75EBDFD61EA22F02001D0CA7 /* images */,
+				75EBDFBF1EA224AB001D0CA7 /* LLAVPlayerView */,
+				75EBDFC21EA224AB001D0CA7 /* LLVideoPlayerViewController.h */,
+				75EBDFC31EA224AB001D0CA7 /* LLVideoPlayerViewController.m */,
+			);
+			path = LLVideoPlayer;
+			sourceTree = "<group>";
+		};
+		75EBDFBF1EA224AB001D0CA7 /* LLAVPlayerView */ = {
+			isa = PBXGroup;
+			children = (
+				75EBDFC01EA224AB001D0CA7 /* LLAVPlayerView.h */,
+				75EBDFC11EA224AB001D0CA7 /* LLAVPlayerView.m */,
+				75EBDFC91EA22616001D0CA7 /* UIImage+LLAVPlayer.h */,
+				75EBDFCA1EA22616001D0CA7 /* UIImage+LLAVPlayer.m */,
+			);
+			path = LLAVPlayerView;
+			sourceTree = "<group>";
+		};
+		75EBDFD61EA22F02001D0CA7 /* images */ = {
+			isa = PBXGroup;
+			children = (
+				75EBDFD41EA22CB7001D0CA7 /* back_white_small.png */,
+				75EBDFD01EA22C9D001D0CA7 /* player_pause.png */,
+				75EBDFD11EA22C9D001D0CA7 /* player_play.png */,
+			);
+			name = images;
+			path = LLAVPlayerView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -207,6 +259,7 @@
 				TargetAttributes = {
 					75EBDF871EA22486001D0CA7 = {
 						CreatedOnToolsVersion = 8.3.1;
+						DevelopmentTeam = 78835ZHBFS;
 						ProvisioningStyle = Automatic;
 					};
 					75EBDFA01EA22486001D0CA7 = {
@@ -246,9 +299,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				75EBDFD21EA22C9D001D0CA7 /* player_pause.png in Resources */,
 				75EBDF9B1EA22486001D0CA7 /* LaunchScreen.storyboard in Resources */,
+				75EBDFCF1EA22C45001D0CA7 /* rzjt.MP4 in Resources */,
 				75EBDF981EA22486001D0CA7 /* Assets.xcassets in Resources */,
+				75EBDFD31EA22C9D001D0CA7 /* player_play.png in Resources */,
 				75EBDF961EA22486001D0CA7 /* Main.storyboard in Resources */,
+				75EBDFD51EA22CB7001D0CA7 /* back_white_small.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -273,9 +330,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				75EBDFC51EA224AB001D0CA7 /* LLVideoPlayerViewController.m in Sources */,
 				75EBDF931EA22486001D0CA7 /* ViewController.m in Sources */,
 				75EBDF901EA22486001D0CA7 /* AppDelegate.m in Sources */,
+				75EBDFC41EA224AB001D0CA7 /* LLAVPlayerView.m in Sources */,
 				75EBDF8D1EA22486001D0CA7 /* main.m in Sources */,
+				75EBDFCB1EA22616001D0CA7 /* UIImage+LLAVPlayer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -426,9 +486,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 78835ZHBFS;
 				INFOPLIST_FILE = LLVideoPlayer/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = Mr.Wang.LLVideoPlayer;
+				PRODUCT_BUNDLE_IDENTIFIER = com.wang.foundation;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -437,9 +498,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 78835ZHBFS;
 				INFOPLIST_FILE = LLVideoPlayer/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = Mr.Wang.LLVideoPlayer;
+				PRODUCT_BUNDLE_IDENTIFIER = com.wang.foundation;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
