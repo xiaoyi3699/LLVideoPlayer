@@ -2,7 +2,8 @@
 
 //效果图
 
-![Image text](https://github.com/wangzhaomeng/LLWebBrowser/blob/master/web.png?raw=true)
+![Image text](https://github.com/wangzhaomeng/LLVideoPlayer/blob/master/LLVideoPlayer-横屏.png?raw=true)
+![Image text](https://github.com/wangzhaomeng/LLVideoPlayer/blob/master/LLVideoPlayer-竖屏.png?raw=true)
 
 //使用
 ```
