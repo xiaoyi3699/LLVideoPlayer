@@ -491,6 +491,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.wang.foundation;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -503,6 +504,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.wang.foundation;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -571,6 +573,7 @@
 				75EBDFB71EA22486001D0CA7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		75EBDFB81EA22486001D0CA7 /* Build configuration list for PBXNativeTarget "LLVideoPlayerTests" */ = {
 			isa = XCConfigurationList;
@@ -579,6 +582,7 @@
 				75EBDFBA1EA22486001D0CA7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		75EBDFBB1EA22486001D0CA7 /* Build configuration list for PBXNativeTarget "LLVideoPlayerUITests" */ = {
 			isa = XCConfigurationList;
@@ -587,6 +591,7 @@
 				75EBDFBD1EA22486001D0CA7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
