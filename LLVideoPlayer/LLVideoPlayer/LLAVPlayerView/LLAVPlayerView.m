@@ -32,6 +32,7 @@ typedef NS_ENUM(NSUInteger, LLDirection) {
 @property (nonatomic, assign) CGPoint startPoint;
 @property (nonatomic, assign) CGFloat startVB;
 @property (nonatomic, assign) CGFloat startVideoRate;
+@property (nonatomic, assign) CGFloat dur;
 @property (nonatomic, strong) MPVolumeView *volumeView;    //控制音量的view
 @property (nonatomic, strong) UISlider *volumeViewSlider;  //控制音量
 @property (nonatomic, strong) UISlider *brightnessSlider;  //控制亮度
@@ -82,15 +83,15 @@ typedef NS_ENUM(NSUInteger, LLDirection) {
                 //获取当前播放时间
                 NSInteger current = CMTimeGetSeconds(weakPlayer.currentItem.currentTime);
                 //总时间
-                NSInteger dur = CMTimeGetSeconds(weakPlayer.currentItem.duration);
+                weakSelf.dur = CMTimeGetSeconds(weakPlayer.currentItem.duration);
                 
-                float pro = current*1.0/dur;
+                float pro = current*1.0/weakSelf.dur;
                 if (pro >= 0.0 && pro <= 1.0) {
                     //回到主线程刷新UI
                     dispatch_async(dispatch_get_main_queue(), ^{
                         weakSlider.value     = pro;
                         weakCurrentTime.text = [weakSelf getTime:current];
-                        weakTotalTime.text   = [weakSelf getTime:dur];
+                        weakTotalTime.text   = [weakSelf getTime:weakSelf.dur];
                     });
                 }
             }];
@@ -302,7 +303,7 @@ typedef NS_ENUM(NSUInteger, LLDirection) {
     }
     CMTime dur = _player.currentItem.duration;
     float current = _progressSlider.value;
-    _currentTime.text = [self getTime:(NSInteger)(current*CMTimeGetSeconds(dur))];
+    _currentTime.text = [self getTime:(NSInteger)(current*self.dur)];
     //跳转到指定的时间
     [_player seekToTime:CMTimeMultiplyByFloat64(dur, current)];
 }
@@ -339,7 +340,7 @@ typedef NS_ENUM(NSUInteger, LLDirection) {
         self.startVB = self.volumeViewSlider.value;
     }
     CMTime ctime = _player.currentTime;
-    self.startVideoRate = ctime.value /ctime.timescale/CMTimeGetSeconds(_player.currentItem.duration);
+    self.startVideoRate = ctime.value /ctime.timescale/self.dur;
 }
 
 /**
@@ -366,7 +367,8 @@ typedef NS_ENUM(NSUInteger, LLDirection) {
     }
     
     if (self.direction == LLDirectionHrizontal) {
-        CGFloat rate = self.startVideoRate+(panPoint.x /self.bounds.size.width/20);
+        CGFloat rate = self.startVideoRate+(panPoint.x*180/(self.bounds.size.width*self.dur));
+        NSLog(@"%f",self.dur);
         if (rate > 1) {
             rate = 1;
         }
@@ -375,7 +377,7 @@ typedef NS_ENUM(NSUInteger, LLDirection) {
         }
         _progressSlider.value = rate;
         CMTime dur = _player.currentItem.duration;
-        _currentTime.text = [self getTime:(NSInteger)(rate*CMTimeGetSeconds(dur))];
+        _currentTime.text = [self getTime:(NSInteger)(rate*self.dur)];
         [_player seekToTime:CMTimeMultiplyByFloat64(dur, rate)];
         
     }else if (self.direction == LLDirectionVertical) {
