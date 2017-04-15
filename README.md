@@ -1,4 +1,4 @@
- [我的博客：iOS使用AVPlayer自定义视频播放器](http://www.jianshu.com/p/af72737cdeb8)<br />
+ [我的博客：iOS使用AVPlayer自定义视频播放器](http://www.jianshu.com/p/af72737cdeb8)
 
 //效果图
 
