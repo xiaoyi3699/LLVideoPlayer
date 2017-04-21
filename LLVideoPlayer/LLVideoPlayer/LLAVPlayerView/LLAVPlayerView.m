@@ -428,26 +428,7 @@ typedef NS_ENUM(NSUInteger, LLDirection) {
     }
 }
 
-#pragma mark - 视频播放完毕
--(void)moviePlayDidEnd:(NSNotification *)notification
-{
-    NSLog(@"视频播放完毕！");
-}
-
 #pragma mark - private method
-//销毁player
--(void)releasePlayer
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    if (_player) {
-        [_player pause];
-        _player=nil;
-    }
-    for (UIView *view in _toolView.subviews) {
-        [view removeFromSuperview];
-    }
-}
-
 //将秒数换算成具体时长
 - (NSString *)getTime:(NSInteger)second
 {
@@ -466,17 +447,17 @@ typedef NS_ENUM(NSUInteger, LLDirection) {
     return time;
 }
 
+#pragma mark - 视频播放完毕
+-(void)moviePlayDidEnd:(NSNotification *)notification
+{
+    NSLog(@"视频播放完毕！");
+}
+
 #pragma mark - super method
 - (void)dealloc
 {
     NSLog(@"playerView释放了,无内存泄漏");
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
-
-- (void)removeFromSuperview
-{
-    [self releasePlayer];
-    [super removeFromSuperview];
-}
-#pragma mark
 
 @end
