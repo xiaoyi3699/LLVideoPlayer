@@ -21,19 +21,21 @@ typedef NS_ENUM(NSUInteger, LLDirection) {
     UIView   *_topView;
     UIView   *_toolView;
     AVPlayer *_player;
-    UISlider *_progressSlider;
+    UISlider *_progressSlider; //控制播放进度
     UILabel  *_currentTime;
     UILabel  *_totalTime;
-    UIButton *_playBtn;
+    UIButton *_playBtn;        //播放按钮
 }
 
+//视屏总时长
+@property (nonatomic, assign) CGFloat dur;
 
+//以下是滑动手势相关变量
 @property (nonatomic, assign) LLDirection direction;
 @property (nonatomic, assign) CGPoint startPoint;
 @property (nonatomic, assign) CGFloat startVB;
 @property (nonatomic, assign) CGFloat startVideoRate;
-@property (nonatomic, assign) CGFloat dur;
-@property (nonatomic, strong) MPVolumeView *volumeView;    //控制音量的view
+@property (nonatomic, strong) MPVolumeView *volumeView;
 @property (nonatomic, strong) UISlider *volumeViewSlider;  //控制音量
 @property (nonatomic, strong) UISlider *brightnessSlider;  //控制亮度
 
