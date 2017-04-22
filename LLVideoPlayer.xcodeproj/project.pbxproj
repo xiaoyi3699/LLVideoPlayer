@@ -60,8 +60,8 @@
 		75EBDFB21EA22486001D0CA7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		75EBDFC01EA224AB001D0CA7 /* LLAVPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LLAVPlayerView.h; sourceTree = "<group>"; };
 		75EBDFC11EA224AB001D0CA7 /* LLAVPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LLAVPlayerView.m; sourceTree = "<group>"; };
-		75EBDFC21EA224AB001D0CA7 /* LLVideoPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LLVideoPlayerViewController.h; sourceTree = "<group>"; };
-		75EBDFC31EA224AB001D0CA7 /* LLVideoPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LLVideoPlayerViewController.m; sourceTree = "<group>"; };
+		75EBDFC21EA224AB001D0CA7 /* LLVideoPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LLVideoPlayerViewController.h; path = LLVideoPlayer/LLVideoPlayerViewController.h; sourceTree = "<group>"; };
+		75EBDFC31EA224AB001D0CA7 /* LLVideoPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LLVideoPlayerViewController.m; path = LLVideoPlayer/LLVideoPlayerViewController.m; sourceTree = "<group>"; };
 		75EBDFC91EA22616001D0CA7 /* UIImage+LLAVPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+LLAVPlayer.h"; sourceTree = "<group>"; };
 		75EBDFCA1EA22616001D0CA7 /* UIImage+LLAVPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+LLAVPlayer.m"; sourceTree = "<group>"; };
 		75EBDFCE1EA22C45001D0CA7 /* rzjt.MP4 */ = {isa = PBXFileReference; lastKnownFileType = file; name = rzjt.MP4; path = LLVideoPlayer/rzjt.MP4; sourceTree = "<group>"; };
@@ -124,6 +124,8 @@
 				75EBDF8F1EA22486001D0CA7 /* AppDelegate.m */,
 				75EBDF911EA22486001D0CA7 /* ViewController.h */,
 				75EBDF921EA22486001D0CA7 /* ViewController.m */,
+				75EBDFC21EA224AB001D0CA7 /* LLVideoPlayerViewController.h */,
+				75EBDFC31EA224AB001D0CA7 /* LLVideoPlayerViewController.m */,
 				75EBDF941EA22486001D0CA7 /* Main.storyboard */,
 				75EBDF971EA22486001D0CA7 /* Assets.xcassets */,
 				75EBDF991EA22486001D0CA7 /* LaunchScreen.storyboard */,
@@ -164,8 +166,6 @@
 			children = (
 				75EBDFD61EA22F02001D0CA7 /* images */,
 				75EBDFBF1EA224AB001D0CA7 /* LLAVPlayerView */,
-				75EBDFC21EA224AB001D0CA7 /* LLVideoPlayerViewController.h */,
-				75EBDFC31EA224AB001D0CA7 /* LLVideoPlayerViewController.m */,
 			);
 			path = LLVideoPlayer;
 			sourceTree = "<group>";

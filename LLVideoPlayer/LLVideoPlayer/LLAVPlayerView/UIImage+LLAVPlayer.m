@@ -22,3 +22,18 @@
 }
 
 @end
+
+@implementation UIView (LLAVPlayer)
+
+- (UIViewController *)viewController{
+    UIResponder *next = [self nextResponder];
+    do{
+        if ([next isKindOfClass:[UIViewController class]]) {
+            return (UIViewController *)next;
+        }
+        next = [next nextResponder];
+    } while (next);
+    return nil;
+}
+
+@end

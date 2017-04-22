@@ -25,6 +25,7 @@ typedef NS_ENUM(NSUInteger, LLDirection) {
     UILabel  *_currentTime;
     UILabel  *_totalTime;
     UIButton *_playBtn;        //播放按钮
+    UIButton *_fullScreenBtn;  //全屏按钮
 }
 
 //视屏总时长
@@ -41,6 +42,7 @@ typedef NS_ENUM(NSUInteger, LLDirection) {
 
 @end
 
+#define LL_SCREEN_BOUNDS  [UIScreen mainScreen].bounds
 #define R_G_B(_r_,_g_,_b_)          \
 [UIColor colorWithRed:_r_/255. green:_g_/255. blue:_b_/255. alpha:1.0]
 #define R_G_B_A(_r_,_g_,_b_,_a_)    \
@@ -53,7 +55,17 @@ typedef NS_ENUM(NSUInteger, LLDirection) {
     if (self) {
         [self createViewsWithFrame:frame];
         
+        //监听横竖屏切换
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientationChanged:) name:UIDeviceOrientationDidChangeNotification object:nil];
+        
+        //监听程序进入后台
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillResignActive:)name:UIApplicationWillResignActiveNotification object:nil];
+        
+        //监听播放结束
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(moviePlayDidEnd:) name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
+        
+        //监听音频播放中断
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(movieInterruption:) name:AVAudioSessionInterruptionNotification object:nil];
     }
     return self;
 }
@@ -101,10 +113,6 @@ typedef NS_ENUM(NSUInteger, LLDirection) {
     }];
 }
 
-//暂停
-- (void)pause {
-    [self playBtnClick:_playBtn];
-}
 
 //创建相关UI
 -(void)createViewsWithFrame:(CGRect)frame
@@ -113,11 +121,13 @@ typedef NS_ENUM(NSUInteger, LLDirection) {
     UITapGestureRecognizer *tapGR = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGR:)];
     [self addGestureRecognizer:tapGR];
     
+    //获取系统的音量view
     self.volumeView.frame = CGRectMake(frame.size.width-30, (frame.size.height-100)/2.0, 20, 100);
     self.volumeView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
     self.volumeView.hidden = YES;
     [self addSubview:self.volumeView];
     
+    //控制亮度
     self.brightnessSlider.frame = CGRectMake(20, (frame.size.height-100)/2.0, 20, 100);
     self.brightnessSlider.minimumValue = 0.0;
     self.brightnessSlider.maximumValue = 1.0;
@@ -126,6 +136,7 @@ typedef NS_ENUM(NSUInteger, LLDirection) {
     self.brightnessSlider.autoresizingMask = UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
     [self addSubview:self.brightnessSlider];
     
+    //顶部view
     _topView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, frame.size.width, 44)];
     _topView.backgroundColor = R_G_B_A(50, 50, 50, .5);
     _topView.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin|UIViewAutoresizingFlexibleWidth;
@@ -142,21 +153,21 @@ typedef NS_ENUM(NSUInteger, LLDirection) {
     [_topView addSubview:backBtn];
     
     //全屏按钮
-    UIButton *fullScreenBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [fullScreenBtn setFrame:CGRectMake(CGRectGetMaxX(_topView.frame)-40, 15, 35, 20)];
-    fullScreenBtn.titleLabel.font = [UIFont systemFontOfSize:11];
-    fullScreenBtn.layer.masksToBounds = YES;
-    fullScreenBtn.layer.cornerRadius = 3;
-    fullScreenBtn.layer.borderColor = R_G_B(200, 200, 200).CGColor;
-    fullScreenBtn.layer.borderWidth = 1;
-    [fullScreenBtn setTitle:@"全屏" forState:UIControlStateNormal];
-    [fullScreenBtn setTitle:@"还原" forState:UIControlStateSelected];
-    [fullScreenBtn setTitleColor:R_G_B(200, 200, 200) forState:UIControlStateNormal];
-    [fullScreenBtn addTarget:self action:@selector(fullScreen:) forControlEvents:UIControlEventTouchUpInside];
-    fullScreenBtn.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-    [_topView addSubview:fullScreenBtn];
-    self.fullScreenBtn = fullScreenBtn;
+    _fullScreenBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [_fullScreenBtn setFrame:CGRectMake(CGRectGetMaxX(_topView.frame)-40, 15, 35, 20)];
+    _fullScreenBtn.titleLabel.font = [UIFont systemFontOfSize:11];
+    _fullScreenBtn.layer.masksToBounds = YES;
+    _fullScreenBtn.layer.cornerRadius = 3;
+    _fullScreenBtn.layer.borderColor = R_G_B(200, 200, 200).CGColor;
+    _fullScreenBtn.layer.borderWidth = 1;
+    [_fullScreenBtn setTitle:@"全屏" forState:UIControlStateNormal];
+    [_fullScreenBtn setTitle:@"还原" forState:UIControlStateSelected];
+    [_fullScreenBtn setTitleColor:R_G_B(200, 200, 200) forState:UIControlStateNormal];
+    [_fullScreenBtn addTarget:self action:@selector(fullScreen:) forControlEvents:UIControlEventTouchUpInside];
+    _fullScreenBtn.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+    [_topView addSubview:_fullScreenBtn];
     
+    //底部view
     _toolView = [[UIView alloc]initWithFrame:CGRectMake(0, frame.size.height-40, frame.size.width, 40)];
     _toolView.backgroundColor = R_G_B_A(50, 50, 50, .5);
     _toolView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleWidth;
@@ -178,6 +189,7 @@ typedef NS_ENUM(NSUInteger, LLDirection) {
     _currentTime.textAlignment = NSTextAlignmentCenter;
     [_toolView addSubview:_currentTime];
     
+    //播放进度条
     _progressSlider= [[UISlider alloc] initWithFrame:CGRectMake(CGRectGetMaxX(_currentTime.frame),12.5,frame.size.width-CGRectGetMaxX(_currentTime.frame)-40,15)];
     _progressSlider.minimumValue = 0.0;
     _progressSlider.maximumValue = 1.0;
@@ -255,69 +267,71 @@ typedef NS_ENUM(NSUInteger, LLDirection) {
 //返回按钮的点击事件
 - (void)goBack:(UIButton *)btn
 {
-    if ([self.delegate respondsToSelector:@selector(goback)]) {
-        [self.delegate goback];
+    if (self.viewController.navigationController.topViewController == self.viewController) {
+        [self.viewController.navigationController popViewControllerAnimated:YES];
     }
+    else {
+        [self.viewController dismissViewControllerAnimated:YES completion:nil];
+    }
+    
 }
 
 //全屏按钮的点击事件
 - (void)fullScreen:(UIButton *)btn
 {
-    if ([self.delegate respondsToSelector:@selector(fullScreen:)]) {
-        [self.delegate fullScreen:btn];
+    CGFloat rotation;
+    UIInterfaceOrientation orientation;
+    if (btn.selected) {
+        rotation = 0;
+        btn.selected = NO;
+        orientation = UIInterfaceOrientationPortrait;
     }
+    else {
+        rotation = 0.5;
+        btn.selected = YES;
+        orientation = UIInterfaceOrientationLandscapeLeft;
+    }
+    
+    //状态栏动画持续时间
+    //CGFloat duration = [UIApplication sharedApplication].statusBarOrientationAnimationDuration;
+    [UIView animateWithDuration:.25 animations:^{
+        //修改状态栏的方向及view的方向进而强制旋转屏幕
+        //[[UIApplication sharedApplication] setStatusBarOrientation:orientation animated:YES];
+        self.transform = CGAffineTransformMakeRotation(M_PI*(rotation));
+        self.frame = LL_SCREEN_BOUNDS;
+    }];
 }
 
 #pragma mark - 底部view相关事件
 //播放按钮的点击事件
 -(void)playBtnClick:(UIButton *)btn
 {
-    if (_player == nil) {
-        return;
-    }
-    if (btn.selected) {//暂停
-        [_player pause];
-        btn.selected = NO;
-        return;
-    }
-    else {//播放
-        [_player play];
-        btn.selected = YES;
-    }
+    btn.selected ? [self pause] : [self play];
 }
 
 //进度条滑动开始
 -(void)touchDown:(UISlider *)sl
 {
-    if (_player == nil) {
-        return;
-    }
-    [_player pause];
-    _playBtn.selected = NO;
+    [self pause];
 }
 
 //进度条滑动
 -(void)touchChange:(UISlider *)sl
 {
     //通过进度条控制播放进度
-    if (_player == nil) {
-        return;
+    if (_player) {
+        CMTime dur = _player.currentItem.duration;
+        float current = _progressSlider.value;
+        _currentTime.text = [self getTime:(NSInteger)(current*self.dur)];
+        //跳转到指定的时间
+        [_player seekToTime:CMTimeMultiplyByFloat64(dur, current)];
     }
-    CMTime dur = _player.currentItem.duration;
-    float current = _progressSlider.value;
-    _currentTime.text = [self getTime:(NSInteger)(current*self.dur)];
-    //跳转到指定的时间
-    [_player seekToTime:CMTimeMultiplyByFloat64(dur, current)];
 }
 
 //进度条滑动结束
 -(void)touchUp:(UISlider *)sl
 {
-    if (_player == nil) {
-        return;
-    }
-    [_player play];
-    _playBtn.selected = YES;
+    [self play];
 }
 
 #pragma mark - 滑动手势处理,亮度/音量/进度
@@ -357,7 +371,7 @@ typedef NS_ENUM(NSUInteger, LLDirection) {
     if (self.direction == LLDirectionNone) {
         //分析出用户滑动的方向
         if (fabs(panPoint.x) >= 30) {
-            [_player pause];
+            [self pause];
             self.direction = LLDirectionHrizontal;
         }
         else if (fabs(panPoint.y) >= 30) {
@@ -408,7 +422,7 @@ typedef NS_ENUM(NSUInteger, LLDirection) {
 - (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     [super touchesEnded:touches withEvent:event];
     if (self.direction == LLDirectionHrizontal) {
-        [_player play];
+        [self play];
     }
     else if (self.direction == LLDirectionVertical) {
         self.volumeView.hidden = YES;
@@ -422,7 +436,7 @@ typedef NS_ENUM(NSUInteger, LLDirection) {
 - (void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     [super touchesCancelled:touches withEvent:event];
     if (self.direction == LLDirectionHrizontal) {
-        [_player play];
+        [self play];
     }
     else if (self.direction == LLDirectionVertical) {
         self.volumeView.hidden = YES;
@@ -431,6 +445,22 @@ typedef NS_ENUM(NSUInteger, LLDirection) {
 }
 
 #pragma mark - private method
+//播放
+- (void)play {
+    if (_player) {
+        [_player play];
+        _playBtn.selected = YES;
+    }
+}
+
+//暂停
+- (void)pause {
+    if (_player) {
+        [_player pause];
+        _playBtn.selected = NO;
+    }
+}
+
 //将秒数换算成具体时长
 - (NSString *)getTime:(NSInteger)second
 {
@@ -449,7 +479,64 @@ typedef NS_ENUM(NSUInteger, LLDirection) {
     return time;
 }
 
-#pragma mark - 视频播放完毕
+#pragma mark - 相关监听
+//横竖屏切换
+- (void)orientationChanged:(NSNotification *)notification {
+    if (_player == nil) return;
+    UIDeviceOrientation currentOrientation = [UIDevice currentDevice].orientation;
+    if (currentOrientation == UIDeviceOrientationFaceUp) return;
+    static CGFloat rotation;
+    if (currentOrientation == UIDeviceOrientationLandscapeLeft) {
+        rotation = 0.5;
+        _fullScreenBtn.selected = YES;
+    }
+    else if (currentOrientation == UIDeviceOrientationLandscapeRight) {
+        rotation = -0.5;
+        _fullScreenBtn.selected = YES;
+    }
+    else {
+        rotation = 0;
+        _fullScreenBtn.selected = NO;
+    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [UIView animateWithDuration:0.25 animations:^{
+            self.transform = CGAffineTransformMakeRotation(M_PI*(rotation));
+            self.frame = LL_SCREEN_BOUNDS;
+        }];
+    });
+}
+
+//音频播放中断
+- (void)movieInterruption:(NSNotification *)notification {
+    NSDictionary *interuptionDict = notification.userInfo;
+    NSInteger interuptionType = [[interuptionDict valueForKey:AVAudioSessionInterruptionTypeKey] integerValue];
+    NSNumber  *seccondReason  = [[notification userInfo] objectForKey:AVAudioSessionInterruptionOptionKey] ;
+    switch (interuptionType) {
+        case AVAudioSessionInterruptionTypeBegan:
+        {
+            //收到中断，停止音频播放
+            [self pause];
+            break;
+        }
+        case AVAudioSessionInterruptionTypeEnded:
+            //系统中断结束
+            break;
+    }
+    switch ([seccondReason integerValue]) {
+        case AVAudioSessionInterruptionOptionShouldResume:
+            //恢复音频播放
+            [self play];
+            break;
+        default:
+            break;
+    }
+}
+
+//程序进入后台
+- (void)applicationWillResignActive:(NSNotification *)notification {
+    [self pause];//暂停播放
+}
+
 -(void)moviePlayDidEnd:(NSNotification *)notification
 {
     NSLog(@"视频播放完毕！");

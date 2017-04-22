@@ -13,3 +13,9 @@
 + (UIImage *)getRoundImageWithColor:(UIColor*)color size:(CGSize)size;
 
 @end
+
+@interface UIView (LLAVPlayer)
+
+- (UIViewController *)viewController;
+
+@end
