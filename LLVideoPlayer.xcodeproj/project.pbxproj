@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		75E7C5111EBC504700FF2C2C /* LLAVPlayerItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 75E7C5101EBC504700FF2C2C /* LLAVPlayerItem.m */; };
 		75EBDF8D1EA22486001D0CA7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 75EBDF8C1EA22486001D0CA7 /* main.m */; };
 		75EBDF901EA22486001D0CA7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 75EBDF8F1EA22486001D0CA7 /* AppDelegate.m */; };
 		75EBDF931EA22486001D0CA7 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 75EBDF921EA22486001D0CA7 /* ViewController.m */; };
@@ -42,6 +43,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		75E7C50F1EBC504700FF2C2C /* LLAVPlayerItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LLAVPlayerItem.h; sourceTree = "<group>"; };
+		75E7C5101EBC504700FF2C2C /* LLAVPlayerItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LLAVPlayerItem.m; sourceTree = "<group>"; };
 		75EBDF881EA22486001D0CA7 /* LLVideoPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LLVideoPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		75EBDF8C1EA22486001D0CA7 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		75EBDF8E1EA22486001D0CA7 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -175,6 +178,8 @@
 			children = (
 				75EBDFC01EA224AB001D0CA7 /* LLAVPlayerView.h */,
 				75EBDFC11EA224AB001D0CA7 /* LLAVPlayerView.m */,
+				75E7C50F1EBC504700FF2C2C /* LLAVPlayerItem.h */,
+				75E7C5101EBC504700FF2C2C /* LLAVPlayerItem.m */,
 				75EBDFC91EA22616001D0CA7 /* UIImage+LLAVPlayer.h */,
 				75EBDFCA1EA22616001D0CA7 /* UIImage+LLAVPlayer.m */,
 			);
@@ -334,6 +339,7 @@
 				75EBDF931EA22486001D0CA7 /* ViewController.m in Sources */,
 				75EBDF901EA22486001D0CA7 /* AppDelegate.m in Sources */,
 				75EBDFC41EA224AB001D0CA7 /* LLAVPlayerView.m in Sources */,
+				75E7C5111EBC504700FF2C2C /* LLAVPlayerItem.m in Sources */,
 				75EBDF8D1EA22486001D0CA7 /* main.m in Sources */,
 				75EBDFCB1EA22616001D0CA7 /* UIImage+LLAVPlayer.m in Sources */,
 			);

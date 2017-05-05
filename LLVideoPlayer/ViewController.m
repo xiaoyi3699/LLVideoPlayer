@@ -22,14 +22,14 @@
     
     //播放本地视频
     NSString *filePath = [[NSBundle mainBundle] pathForResource:@"rzjt" ofType:@"MP4"];
+    _fileURL = [NSURL fileURLWithPath:filePath];
     
-    //播放网络视频
-    //NSString *filePath = @"http://oopas6scq.bkt.clouddn.com/video/rzjt.MP4";
-    
-    _fileURL = [NSURL URLWithString:filePath];
-    if (_fileURL == nil) {
-        _fileURL = [NSURL fileURLWithPath:filePath];
-    }
+//    //播放网络视频
+//    NSString *filePath = @"http://oopas6scq.bkt.clouddn.com/video/rzjt.MP4";
+//    _fileURL = [NSURL URLWithString:filePath];
+//    if (_fileURL == nil) {
+//        _fileURL = [NSURL URLWithString:[filePath stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+//    }
 }
 
 - (IBAction)btn:(id)sender {

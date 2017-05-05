@@ -8,6 +8,7 @@
 
 #import "LLAVPlayerView.h"
 #import "UIImage+LLAVPlayer.h"
+#import "LLAVPlayerItem.h"
 #import <AVFoundation/AVFoundation.h>
 #import <MediaPlayer/MediaPlayer.h>
 
@@ -26,6 +27,7 @@ typedef NS_ENUM(NSUInteger, LLDirection) {
     UILabel  *_totalTime;
     UIButton *_playBtn;        //播放按钮
     UIButton *_fullScreenBtn;  //全屏按钮
+    id _playTimeObserver;
 }
 
 //视屏总时长
@@ -81,32 +83,37 @@ typedef NS_ENUM(NSUInteger, LLDirection) {
         //如果资源加载完成,开始进行播放
         if (status == AVKeyValueStatusLoaded) {
             //将加载好的资源放入AVPlayerItem 中，item中包含视频资源数据,视频资源时长、当前播放的时间点等信息
-            AVPlayerItem *item = [AVPlayerItem playerItemWithAsset:asset];
-            _player = [[AVPlayer alloc] initWithPlayerItem:item];
-            //将播放器与播放视图关联
-            [self setPlayer:_player];
-            [_player play];
+            LLAVPlayerItem *item = [LLAVPlayerItem playerItemWithAsset:asset];
+            item.observer = self;
+            
+            //观察播放状态
+            [item addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:nil];
+            
+            //观察缓冲进度
+            [item addObserver:self forKeyPath:@"loadedTimeRanges" options:NSKeyValueObservingOptionNew context:nil];
+            
+            if (_player) {
+                [_player removeTimeObserver:_playTimeObserver];
+                [_player replaceCurrentItemWithPlayerItem:item];
+            }
+            else {
+                _player = [[AVPlayer alloc] initWithPlayerItem:item];
+            }
+            
             //需要时时显示播放的进度
             //根据播放的帧数、速率，进行时间的异步(在子线程中完成)获取
             __weak AVPlayer *weakPlayer     = _player;
             __weak UISlider *weakSlider     = _progressSlider;
             __weak UILabel *weakCurrentTime = _currentTime;
-            __weak UILabel *weakTotalTime   = _totalTime;
             __weak typeof(self) weakSelf    = self;
-            [_player addPeriodicTimeObserverForInterval:CMTimeMake(1.0, 1.0) queue:dispatch_get_global_queue(0, 0) usingBlock:^(CMTime time) {
+            _playTimeObserver = [_player addPeriodicTimeObserverForInterval:CMTimeMake(1.0, 1.0) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
                 //获取当前播放时间
                 NSInteger current = CMTimeGetSeconds(weakPlayer.currentItem.currentTime);
-                //总时间
-                weakSelf.dur = CMTimeGetSeconds(weakPlayer.currentItem.duration);
                 
                 float pro = current*1.0/weakSelf.dur;
                 if (pro >= 0.0 && pro <= 1.0) {
-                    //回到主线程刷新UI
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        weakSlider.value     = pro;
-                        weakCurrentTime.text = [weakSelf getTime:current];
-                        weakTotalTime.text   = [weakSelf getTime:weakSelf.dur];
-                    });
+                    weakSlider.value     = pro;
+                    weakCurrentTime.text = [weakSelf getTime:current];
                 }
             }];
         }
@@ -445,6 +452,15 @@ typedef NS_ENUM(NSUInteger, LLDirection) {
 }
 
 #pragma mark - private method
+//计算缓冲时间
+- (CGFloat)availableDuration {
+    NSArray *loadedTimeRanges = [_player.currentItem loadedTimeRanges];
+    CMTimeRange range = [loadedTimeRanges.firstObject CMTimeRangeValue];
+    CGFloat start = CMTimeGetSeconds(range.start);
+    CGFloat duration = CMTimeGetSeconds(range.duration);
+    return (start + duration);
+}
+
 //播放
 - (void)play {
     if (_player) {
@@ -480,6 +496,47 @@ typedef NS_ENUM(NSUInteger, LLDirection) {
 }
 
 #pragma mark - 相关监听
+//监听播放开始
+- (void)observeValueForKeyPath:(NSString *)keyPath
+                      ofObject:(id)object
+                        change:(NSDictionary<NSString *,id> *)change
+                       context:(void *)context {
+    
+    AVPlayerItem *item = (AVPlayerItem *)object;
+    if ([keyPath isEqualToString:@"status"]) {
+        if (item.status == AVPlayerStatusReadyToPlay) {
+            
+            //获取当前播放时间
+            NSInteger current = CMTimeGetSeconds(item.currentTime);
+            //总时间
+            self.dur = CMTimeGetSeconds(item.duration);
+            
+            float pro = current*1.0/self.dur;
+            if (pro >= 0.0 && pro <= 1.0) {
+                _progressSlider.value  = pro;
+                _currentTime.text      = [self getTime:current];
+                _totalTime.text        = [self getTime:self.dur];
+            }
+            //将播放器与播放视图关联
+            [self setPlayer:_player];
+            [_player play];
+        }
+        else if (item.status == AVPlayerStatusFailed) {
+            NSLog(@"AVPlayerStatusFailed");
+        }
+        else {
+            NSLog(@"AVPlayerStatusUnknown");
+        }
+        
+    } else if ([keyPath isEqualToString:@"loadedTimeRanges"]) {
+        NSTimeInterval timeInterval = [self availableDuration];
+        float pro = timeInterval/self.dur;
+        if (pro >= 0.0 && pro <= 1.0) {
+            NSLog(@"缓冲进度：%f",pro);
+        }
+    }
+}
+
 //横竖屏切换
 - (void)orientationChanged:(NSNotification *)notification {
     if (_player == nil) return;
@@ -546,6 +603,9 @@ typedef NS_ENUM(NSUInteger, LLDirection) {
 - (void)dealloc
 {
     NSLog(@"playerView释放了,无内存泄漏");
+    [_player removeTimeObserver:_playTimeObserver];
+    [_player.currentItem removeObserver:self forKeyPath:@"status"];
+    [_player.currentItem removeObserver:self forKeyPath:@"loadedTimeRanges"];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
