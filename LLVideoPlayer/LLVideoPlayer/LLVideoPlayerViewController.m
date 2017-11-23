@@ -43,6 +43,10 @@
     [self.view addSubview:_playerView];
 }
 
+- (void)viewWillLayoutSubviews {
+    _playerView.frame = self.view.bounds;
+}
+
 - (void)dealloc {
     NSLog(@"playerViewController释放了,无内存泄漏");
 }

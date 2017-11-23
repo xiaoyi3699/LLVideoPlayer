@@ -57,8 +57,10 @@ typedef NS_ENUM(NSUInteger, LLDirection) {
     if (self) {
         [self createViewsWithFrame:frame];
         
+        /* 不使用这种方式进行横竖屏切换
         //监听横竖屏切换
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientationChanged:) name:UIDeviceOrientationDidChangeNotification object:nil];
+         */
         
         //监听程序进入后台
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillResignActive:)name:UIApplicationWillResignActiveNotification object:nil];
@@ -159,6 +161,7 @@ typedef NS_ENUM(NSUInteger, LLDirection) {
     [backBtn addTarget:self action:@selector(goBack:) forControlEvents:UIControlEventTouchUpInside];
     [_topView addSubview:backBtn];
     
+    /* 不使用这种方式进行横竖屏切换
     //全屏按钮
     _fullScreenBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [_fullScreenBtn setFrame:CGRectMake(CGRectGetMaxX(_topView.frame)-40, 15, 35, 20)];
@@ -173,6 +176,7 @@ typedef NS_ENUM(NSUInteger, LLDirection) {
     [_fullScreenBtn addTarget:self action:@selector(fullScreen:) forControlEvents:UIControlEventTouchUpInside];
     _fullScreenBtn.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     [_topView addSubview:_fullScreenBtn];
+     */
     
     //底部view
     _toolView = [[UIView alloc]initWithFrame:CGRectMake(0, frame.size.height-40, frame.size.width, 40)];
@@ -283,6 +287,7 @@ typedef NS_ENUM(NSUInteger, LLDirection) {
     
 }
 
+/*
 //全屏按钮的点击事件
 - (void)fullScreen:(UIButton *)btn
 {
@@ -298,16 +303,17 @@ typedef NS_ENUM(NSUInteger, LLDirection) {
         btn.selected = YES;
         orientation = UIInterfaceOrientationLandscapeLeft;
     }
-    
+ 
     //状态栏动画持续时间
     //CGFloat duration = [UIApplication sharedApplication].statusBarOrientationAnimationDuration;
-    [UIView animateWithDuration:.25 animations:^{
+    [UIView animateWithDuration:duration animations:^{
         //修改状态栏的方向及view的方向进而强制旋转屏幕
-        //[[UIApplication sharedApplication] setStatusBarOrientation:orientation animated:YES];
+        [[UIApplication sharedApplication] setStatusBarOrientation:orientation animated:YES];
         self.transform = CGAffineTransformMakeRotation(M_PI*(rotation));
         self.frame = LL_SCREEN_BOUNDS;
     }];
 }
+*/
 
 #pragma mark - 底部view相关事件
 //播放按钮的点击事件
@@ -537,6 +543,7 @@ typedef NS_ENUM(NSUInteger, LLDirection) {
     }
 }
 
+/* 不使用这种方式进行横竖屏切换
 //横竖屏切换
 - (void)orientationChanged:(NSNotification *)notification {
     if (_player == nil) return;
@@ -562,6 +569,7 @@ typedef NS_ENUM(NSUInteger, LLDirection) {
         }];
     });
 }
+*/
 
 //音频播放中断
 - (void)movieInterruption:(NSNotification *)notification {
@@ -594,12 +602,17 @@ typedef NS_ENUM(NSUInteger, LLDirection) {
     [self pause];//暂停播放
 }
 
+//视频播放完毕
 -(void)moviePlayDidEnd:(NSNotification *)notification
 {
     NSLog(@"视频播放完毕！");
 }
 
 #pragma mark - super method
+- (void)layoutSubviews {
+    self.frame = LL_SCREEN_BOUNDS;
+}
+
 - (void)dealloc
 {
     NSLog(@"playerView释放了,无内存泄漏");

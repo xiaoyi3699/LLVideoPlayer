@@ -20,7 +20,12 @@
     return YES;
 }
 
-- (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window{
+- (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window {
+    if ([self.window.rootViewController.presentedViewController isKindOfClass:NSClassFromString(@"LLVideoPlayerViewController")]) {
+        return UIInterfaceOrientationMaskPortrait|
+               UIInterfaceOrientationMaskLandscapeLeft|
+               UIInterfaceOrientationMaskLandscapeRight;
+    }
     return UIInterfaceOrientationMaskPortrait;
 }
 
