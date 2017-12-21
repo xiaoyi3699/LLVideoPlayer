@@ -85,7 +85,7 @@ typedef NS_ENUM(NSUInteger, LLDirection) {
         //如果资源加载完成,开始进行播放
         if (status == AVKeyValueStatusLoaded) {
             //将加载好的资源放入AVPlayerItem 中，item中包含视频资源数据,视频资源时长、当前播放的时间点等信息
-            LLAVPlayerItem *item = [LLAVPlayerItem playerItemWithAsset:asset];
+            LLAVPlayerItem *item = [[LLAVPlayerItem alloc] initWithAsset:asset];
             item.observer = self;
             
             //观察播放状态
