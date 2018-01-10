@@ -396,8 +396,8 @@ typedef NS_ENUM(NSUInteger, LLDirection) {
     }
     
     if (self.direction == LLDirectionHrizontal) {
-        CGFloat rate = self.startVideoRate+(panPoint.x*180/(self.bounds.size.width*self.dur));
-        NSLog(@"%f",self.dur);
+        CGFloat scale = (self.dur > 180 ? 180/self.dur : 1.0);
+        CGFloat rate = self.startVideoRate+(panPoint.x/self.bounds.size.width)*scale;
         if (rate > 1) {
             rate = 1;
         }
