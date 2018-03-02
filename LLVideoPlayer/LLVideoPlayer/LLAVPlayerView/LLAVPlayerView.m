@@ -12,6 +12,24 @@
 #import <AVFoundation/AVFoundation.h>
 #import <MediaPlayer/MediaPlayer.h>
 
+@implementation UIViewController (LLAddPart)
+
+///强制转换屏幕方向
+- (void)ll_interfaceOrientation:(UIInterfaceOrientation)orientation {
+    if ([[UIDevice currentDevice] respondsToSelector:@selector(setOrientation:)]) {
+        
+        SEL selector = NSSelectorFromString(@"setOrientation:");
+        NSInvocation * invocation = [NSInvocation invocationWithMethodSignature:[UIDevice instanceMethodSignatureForSelector:selector]];
+        [invocation setSelector:selector];
+        [invocation setTarget:[UIDevice currentDevice]];
+        int val = orientation;
+        [invocation setArgument:&val atIndex:2];
+        [invocation invoke];
+    }
+}
+
+@end
+
 typedef NS_ENUM(NSUInteger, LLDirection) {
     LLDirectionNone = 0,
     LLDirectionHrizontal,    //水平方向滑动
@@ -26,7 +44,8 @@ typedef NS_ENUM(NSUInteger, LLDirection) {
     UILabel  *_currentTime;
     UILabel  *_totalTime;
     UIButton *_playBtn;        //播放按钮
-    UIButton *_fullScreenBtn;  //全屏按钮
+//    UIButton *_fullScreenBtn;  //全屏按钮
+    UIButton *_fullBtn;        //全屏按钮
     id _playTimeObserver;
 }
 
@@ -45,6 +64,9 @@ typedef NS_ENUM(NSUInteger, LLDirection) {
 @end
 
 #define LL_SCREEN_BOUNDS  [UIScreen mainScreen].bounds
+#define SCREEN_WIDTH      [UIScreen mainScreen].bounds.size.width
+#define SCREEN_HEIGHT     [UIScreen mainScreen].bounds.size.height
+#define LL_SCALE          SCREEN_WIDTH/SCREEN_HEIGHT
 #define R_G_B(_r_,_g_,_b_)          \
 [UIColor colorWithRed:_r_/255. green:_g_/255. blue:_b_/255. alpha:1.0]
 #define R_G_B_A(_r_,_g_,_b_,_a_)    \
@@ -153,13 +175,17 @@ typedef NS_ENUM(NSUInteger, LLDirection) {
     
     //返回按钮
     UIButton *backBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [backBtn setFrame:CGRectMake(10, 13, 50, 18)];
+    [backBtn setFrame:CGRectMake(10, 15, 50, 16)];
     backBtn.titleLabel.font = [UIFont systemFontOfSize:15];
     [backBtn setTitle:@" 返回" forState:UIControlStateNormal];
     [backBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [backBtn setImage:[UIImage imageNamed:@"back_white_small"] forState:UIControlStateNormal];
-    [backBtn addTarget:self action:@selector(goBack:) forControlEvents:UIControlEventTouchUpInside];
     [_topView addSubview:backBtn];
+    
+    UIButton *tureBackBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [tureBackBtn setFrame:CGRectMake(0, 0, 60, 44)];
+    [tureBackBtn addTarget:self action:@selector(goBack:) forControlEvents:UIControlEventTouchUpInside];
+    [_topView addSubview:tureBackBtn];
     
     /* 不使用这种方式进行横竖屏切换
     //全屏按钮
@@ -177,6 +203,27 @@ typedef NS_ENUM(NSUInteger, LLDirection) {
     _fullScreenBtn.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     [_topView addSubview:_fullScreenBtn];
      */
+    
+    //全屏按钮
+    _fullBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [_fullBtn setFrame:CGRectMake(_topView.bounds.size.width-50, 10, 40, 25)];
+    _fullBtn.titleLabel.font = [UIFont systemFontOfSize:13];
+    _fullBtn.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+    _fullBtn.layer.masksToBounds = YES;
+    _fullBtn.layer.cornerRadius = 5;
+    _fullBtn.layer.borderColor = R_G_B(230, 230, 230).CGColor;
+    _fullBtn.layer.borderWidth = 0.8;
+    [_fullBtn setTitle:@"全屏" forState:UIControlStateNormal];
+    [_fullBtn setTitle:@"还原" forState:UIControlStateSelected];
+    [_fullBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [_fullBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
+    [_topView addSubview:_fullBtn];
+    
+    UIButton *tureFullBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [tureFullBtn setFrame:CGRectMake(_topView.bounds.size.width-60, 0, 60, 44)];
+    tureFullBtn.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+    [tureFullBtn addTarget:self action:@selector(fullBtnClick) forControlEvents:UIControlEventTouchUpInside];
+    [_topView addSubview:tureFullBtn];
     
     //底部view
     _toolView = [[UIView alloc]initWithFrame:CGRectMake(0, frame.size.height-40, frame.size.width, 40)];
@@ -278,13 +325,30 @@ typedef NS_ENUM(NSUInteger, LLDirection) {
 //返回按钮的点击事件
 - (void)goBack:(UIButton *)btn
 {
-    if (self.viewController.navigationController.topViewController == self.viewController) {
-        [self.viewController.navigationController popViewControllerAnimated:YES];
+    if (_fullBtn.selected) {
+        [self fullBtnClick];
     }
     else {
-        [self.viewController dismissViewControllerAnimated:YES completion:nil];
+        if (self.viewController.navigationController.topViewController == self.viewController) {
+            [self.viewController.navigationController popViewControllerAnimated:YES];
+        }
+        else {
+            [self.viewController dismissViewControllerAnimated:YES completion:nil];
+        }
     }
-    
+}
+
+//全屏按钮的点击事件
+- (void)fullBtnClick
+{
+    UIInterfaceOrientation orientation;
+    if (_fullBtn.selected) {
+        orientation = UIInterfaceOrientationPortrait;
+    }
+    else {
+        orientation = UIInterfaceOrientationLandscapeRight;
+    }
+    [self.viewController ll_interfaceOrientation:orientation];
 }
 
 /*
@@ -611,6 +675,7 @@ typedef NS_ENUM(NSUInteger, LLDirection) {
 #pragma mark - super method
 - (void)layoutSubviews {
     self.frame = LL_SCREEN_BOUNDS;
+    _fullBtn.selected = (LL_SCALE > 1);
 }
 
 - (void)dealloc

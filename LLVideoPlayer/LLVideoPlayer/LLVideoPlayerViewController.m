@@ -43,6 +43,12 @@
     [self.view addSubview:_playerView];
 }
 
+- (UIInterfaceOrientationMask)ll_supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait|
+    UIInterfaceOrientationMaskLandscapeLeft|
+    UIInterfaceOrientationMaskLandscapeRight;
+}
+
 - (void)viewWillLayoutSubviews {
     _playerView.frame = self.view.bounds;
 }

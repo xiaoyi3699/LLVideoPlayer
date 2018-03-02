@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import "UIViewController+LLVideoPlayer.h"
 
 @interface AppDelegate ()
 
@@ -21,11 +22,20 @@
 }
 
 - (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window {
-    if ([self.window.rootViewController.presentedViewController isKindOfClass:NSClassFromString(@"LLVideoPlayerViewController")]) {
-        return UIInterfaceOrientationMaskPortrait|
-               UIInterfaceOrientationMaskLandscapeLeft|
-               UIInterfaceOrientationMaskLandscapeRight;
+    UIViewController *rootVC = self.window.rootViewController;
+    UIViewController *presentedVC = rootVC.presentedViewController;
+    
+    if (presentedVC.isBeingDismissed) {
+        if ([rootVC respondsToSelector:@selector(ll_supportedInterfaceOrientations)]) {
+            return [rootVC ll_supportedInterfaceOrientations];
+        }
     }
+    else {
+        if ([presentedVC respondsToSelector:@selector(ll_supportedInterfaceOrientations)]) {
+            return [presentedVC ll_supportedInterfaceOrientations];
+        }
+    }
+    
     return UIInterfaceOrientationMaskPortrait;
 }
 

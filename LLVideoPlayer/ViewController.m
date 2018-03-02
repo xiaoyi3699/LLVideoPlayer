@@ -21,7 +21,7 @@
     [super viewDidLoad];
     
     //播放本地视频
-    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"rzjt" ofType:@"MP4"];
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"qnyn_juqing" ofType:@"mp4"];
     _fileURL = [NSURL fileURLWithPath:filePath];
     
 //    //播放网络视频
